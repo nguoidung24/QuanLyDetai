@@ -1,0 +1,27 @@
+body {
+    font-family: sans-serif;
+    /*             overflow: hidden; */
+}
+.my-padding{
+    padding-top: 40px !important;
+    padding-bottom: 20px !important;
+}
+.card {
+    transform: translateY(40%);
+    background: rgba(0, 0, 0, .03);
+    background-image: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/1462889/pat.svg');
+    background-size: 80%;
+    box-shadow: 4px 5px 25px rgba(0, 0, 0, .4) !important;
+}
+
+h3 {
+    font-weight: 580;
+}
+
+label {
+    background: #4b4b4b;
+    -webkit-background-clip: text;
+    /* Cho trình duyệt Safari */
+    background-clip: text;
+    -webkit-text-fill-color: #4b4b4b;
+}
