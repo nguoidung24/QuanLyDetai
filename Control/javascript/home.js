@@ -23,15 +23,15 @@ class Home extends React.Component {
         let textColor = "";
         if(giai_thuong == 1){
             srcImage = "../assets/img/logo_yellow.png";
-            textColor = "text-yellow-900";
+            textColor = "text-yellow-900 bg-gray-200 px-2 py-2 truncate";
         }
         else if(giai_thuong == 2){
             srcImage = "../assets/img/logo_gray.png";
-            textColor = "text-gray-800 ";
+            textColor = "text-gray-800 bg-gray-200 px-2 py-2 truncate";
         }
         else{
             srcImage = "../assets/img/logo_yellow.png";
-            textColor = "text-gray-600 ";
+            textColor = "text-gray-600 bg-gray-200 px-2 py-2 truncate";
         }
         const html = []
         data.map((value, index) => {
@@ -43,7 +43,7 @@ class Home extends React.Component {
                         <p className="text-sm truncate">Người tạo: {value.ten_sinh_vien}</p>
                         <p className="text-sm py-1 truncate">GV hướng dẫn: {value.ten_giang_vien}</p>
                         <p className="text-sm truncate">Năm: {value.ngay_tao}</p>
-                        <button className="border border-sky-700 text-sky-700 px-4 py-1 mt-1 hover:bg-gray-500 rounded">Chi tiết</button>
+                        <button className="border border-sky-700 text-sky-700 px-4 py-1 mt-1 hover:bg-gray-300 rounded">Chi tiết</button>
                     </div>
                 </div>
             )

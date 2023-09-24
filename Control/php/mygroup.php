@@ -4,7 +4,7 @@ require_once "../../Model/_mygroup.php";
 $group = new Group($conn);
 $json = file_get_contents("php://input");
 $data = json_decode($json, true);
-$limit = 1;
+$limit = 2;
 if(isset($data["pageSubmit"])){
     if( $data["pageSubmit"] == "First"){
         $start = 0;
@@ -17,7 +17,7 @@ if(isset($data["pageSubmit"])){
     }
     else if( $data["pageSubmit"] == 'Last'){
         $totalPage = ceil($group->getTotalPage() / $limit);
-        $start = $totalPage - 1;
+        $start = ($totalPage - 1) * $limit;
         $groupAll = $group->getTableGroup($start,$limit);
         $response = [
             "currentPage" =>  $totalPage,
@@ -26,7 +26,7 @@ if(isset($data["pageSubmit"])){
         ];
     }
     else {
-        $start = $data["pageSubmit"] - 1;
+        $start = ($data["pageSubmit"] - 1)*$limit;
         $groupAll = $group->getTableGroup($start,$limit);
         $response = [
             "currentPage" =>  $data["pageSubmit"],

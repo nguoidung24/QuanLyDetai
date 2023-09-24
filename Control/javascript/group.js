@@ -38,19 +38,38 @@ class Group extends React.Component{
         }
     }
     componentDidMount(){
-        fetch("../Control/php/group.php",{})
+        fetch("../Control/php/group.php",{
+            method: "post",
+            headers:{"Content-Type" : "application/json"},
+            body: JSON.stringify({"ma_khoa":"1"})
+        })
         .then(response => response.json())
         .then(data => this.setState(
             (prev) => ({
                 ...prev,
                 options_Khoa: data.getOptions_Khoa,
                 options_BoMon: data.getOptions_BoMon,
-                options_GiangVien: data.getOptions_GiangVien
+                options_GiangVien: data.getOptions_GiangVien,
+                formSubmit : {
+                    ...prev.formSubmit,
+                    ma_giang_vien : data.getOptions_GiangVien[0] && data.getOptions_GiangVien[0].ma_giang_vien
+                }
             })
         ))
     }
     handleCreatGroup = () =>{
-        alert("Creat Group");
+        const {formSubmit} = this.state; 
+        fetch("../Control/php/group.php",{
+            method: "post",
+            headers:{"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                ...formSubmit,
+                "creatGroup" :  true,
+                "ma_sinh_vien": this.props.ma_sinh_vien
+            })
+        })
+        .then(response => response.json())
+        .then(data => alert(data.result))
     }
     get_Option = (text,options,value,display) => {
         let html = [];
@@ -58,31 +77,77 @@ class Group extends React.Component{
             html.push(<option key={index} value={item[value]}>{item[display]}</option>)
         })
         return (
-            <Select onChange={ (e) => {text!="Giảng Viên" && this.handleOnChangeOption(e)}} text={text} options={(html)}/>
+            <Select onChange={ (e) => {text!="Giảng Viên" ? this.handleOnChangeOption(e) : this.handleSelect_Giang_vien(e)}} text={text} options={(html)}/>
         )
+    }
+    handleSelect_Giang_vien = (e) =>{ 
+        this.setState( prev => ({
+            ...prev,
+            formSubmit : {
+                ...prev.formSubmit,
+                ma_giang_vien : e.target.value 
+            }
+        }))
     }
     handleOnChangeOption = (e) => {
         let display =  e.target.parentElement.children[1].innerText;
-        display = display == 'Khoa' ?
-            "ma_khoa" : "ma_bo_mon"
         const value =  e.target.value;
-        alert(display+" : "+value)
-        // fetch("../Control/php/group.php",{
-        //     method: "post",
-        //     headers: {"Content-Type": "application/json"},
-        //     body: JSON.stringify({
-        //         display : value 
-        //     })
-        // })
-        // .then(response => response.json())
-        // .then(data => this.setState(
-        //     (prev) => ({
-        //         ...prev,
-        //         options_Khoa: data.getOptions_Khoa,
-        //         options_BoMon: data.getOptions_BoMon,
-        //         options_GiangVien: data.getOptions_GiangVien
-        //     })
-        // ))
+        if(display == 'Khoa'){
+            fetch("../Control/php/group.php",{
+                method: "post",
+                headers:{"Content-Type" : "application/json"},
+                body: JSON.stringify({"ma_khoa":value})
+            })
+            .then(response => response.json())
+            .then(data => this.setState(
+                (prev) => ({
+                    ...prev,
+                    options_Khoa: data.getOptions_Khoa,
+                    options_BoMon: data.getOptions_BoMon,
+                    options_GiangVien: data.getOptions_GiangVien,
+                    formSubmit : {
+                        ...prev.formSubmit,
+                        ma_giang_vien : data.getOptions_GiangVien[0] && data.getOptions_GiangVien[0].ma_giang_vien
+                    }
+                })
+            ))
+        }
+        else{
+            fetch("../Control/php/group.php",{
+                method: "post",
+                headers:{"Content-Type" : "application/json"},
+                body: JSON.stringify({"ma_bo_mon":value})
+            })
+            .then(response => response.json())
+            .then(data => this.setState(
+                (prev) => ({
+                    ...prev,
+                    options_GiangVien: data.getOptions_GiangVien,
+                    formSubmit : {
+                        ...prev.formSubmit,
+                        ma_giang_vien : data.getOptions_GiangVien[0] &&  data.getOptions_GiangVien[0].ma_giang_vien
+                    }
+                })
+            ))
+        }
+    }
+    handleChange_MaDeTai = (e)  =>{
+        this.setState((prev)=>({
+            ...prev,
+            formSubmit: {
+                ...prev.formSubmit,
+                ma_de_tai : e.target.value
+            }
+        }))
+    }
+    handleChange_TenNhom = (e) =>{
+        this.setState(prev => ({
+            ...prev,
+            formSubmit : {
+                ...prev.formSubmit,
+                ten_nhom : e.target.value
+            }
+        }))
     }
     render(){
         const {options_BoMon, options_Khoa,options_GiangVien} = this.state;
@@ -93,7 +158,7 @@ class Group extends React.Component{
                 >Tạo Nhóm</p>
                 <div className="grid">
                     <div className="md:w-3/6">
-                        <Input text="Tên nhóm"/>
+                        <Input text="Tên nhóm" value={this.state.formSubmit.ten_nhom} handleChange={(e) => this.handleChange_TenNhom(e)}/>
                     </div>
                     <div className="md:w-12/12 mt-2 text-gray-400 ">
                         <p className="py-1 font-medium">Chọn giảng viên hướng dẫn:</p>
@@ -106,13 +171,7 @@ class Group extends React.Component{
                     <div className="md:w-12/12 mt-2 text-gray-400 ">
                         <p className="py-1 font-medium">Chọn đề tài:</p>
                         <div className="md:3/6">
-                            <Select text="Mã đề tài" options={(
-                                <>
-                                    <option value="asdf">Đề tài 1</option>
-                                    <option value="asdf">Đề tài 2</option>
-                                </>
-                                
-                            )}/>
+                            <Input text="Mã đề tài" value={this.state.formSubmit.ma_de_tai} handleChange={(e) => this.handleChange_MaDeTai(e)}/>
                         </div>
                     </div>
                     <div className="mt-3">

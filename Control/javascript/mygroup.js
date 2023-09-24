@@ -74,7 +74,7 @@ class MyGroup extends React.Component {
          let cssClass = `border-b border-gray-400 hover:bg-sky-600
          hover:cursor-pointer `;
          cssClass += addClick && (trActive == item.ma_nhom) ?
-            "bg-sky-900" : "";
+            "bg-sky-600" : "";
          html.push(
             <tr key={index}
                className={cssClass}
@@ -171,11 +171,11 @@ class MyGroup extends React.Component {
       return (
          <form onSubmit={this.handle_ClickPagiantion} >
             <ul className="flex justify-center">
-               {this.get_liPagination("First")}
+               {this.currentPage > 1 && this.get_liPagination("First")}
                {this.currentPage > 1 && this.get_liPagination(this.currentPage - 1)}
                {this.get_liPagination(this.currentPage)}
                {this.currentPage < this.totalPage && this.get_liPagination(this.currentPage + 1)}
-               {this.get_liPagination("Last")}
+               {this.currentPage < this.totalPage && this.get_liPagination("Last")}
             </ul>
          </form>
 

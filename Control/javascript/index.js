@@ -35,12 +35,11 @@ class Menu extends React.Component {
         })
         return html;
     }
-    getLi(isSub, text, icon, sub = []) {
+    getLi(isSub, text, icon, sub = [],profile = false) {
         const { isSubMenuOpen } = this.state;
         if (!isSub) {
             return (
-                <li className={text == "Menu" ?
-                    "border-b border-gray-400 pb-2 " : " "}
+                <li className={text == "Menu" ? "pb-2 " : " "}
                     onClick={() => { if (text != "Menu") this.handle_LiClick(sub[0]) }}>
                     <a className={text == "Menu" ? 
                         "text-gray-800":
@@ -119,9 +118,8 @@ class Menu extends React.Component {
                     </ul>
                     <ul className="content_menu relative pb-4">
                     {this.getLi(true, this.props.ten_sinh_vien, (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="36" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
-                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                                <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="36" fill="currentColor" className="bi bi-person" viewBox="0 0 16 16">
+                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/>
                             </svg>
                         ), [])}
                     </ul>
@@ -129,7 +127,7 @@ class Menu extends React.Component {
                 <main id="main_content" className="main_content">
                     <div className="content" id="main_trang_chu">
                         {main == "home" && <Home />}
-                        {main == "creat" && <Group />}
+                        {main == "creat" && <Group ma_sinh_vien={this.props.ma_sinh_vien}/>}
                         {main == "account" && <Account />}
                         {main == "dang_ky_de_tai" && <Dang_Ky_De_Tai />}
                         {main == "mygroup" && <MyGroup ma_sinh_vien={this.props.ma_sinh_vien} />}
