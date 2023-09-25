@@ -18,6 +18,7 @@ main.main_content .content {
 
 main.main_content .content::-webkit-scrollbar {
     width: 7px;
+    height: 7px;
 }
 
 main.main_content .content::-webkit-scrollbar-track {

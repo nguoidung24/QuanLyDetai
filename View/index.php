@@ -44,6 +44,9 @@ if (!isset($_SESSION['login']))
   <script src="../Control/javascript/group.js" type="text/babel"></script>
   <script src="../Control/javascript/mygroup.js" type="text/babel"></script>
   <script src="../Control/javascript/dang_ky_de_tai.js" type="text/babel"></script>
+  <script src="../Control/javascript/de_tai_cua_ban.js" type="text/babel"></script>
+  <script src="../Control/javascript/profile.js" type="text/babel"></script>
+
 </body>
 
 </html>

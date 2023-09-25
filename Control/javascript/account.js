@@ -36,7 +36,7 @@ class Input extends React.Component {
                pattern={pattern}
                title="Nhập sai định dạng"
                className="w-full
-                     outline-none bg-gray-400
+                     outline-none bg-white
                      pt-6 pb-2 rounded-md
                      border px-4 border-gray-400
                      peer text-black

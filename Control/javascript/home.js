@@ -30,7 +30,7 @@ class Home extends React.Component {
             textColor = "text-gray-800 bg-gray-200 px-2 py-2 truncate";
         }
         else{
-            srcImage = "../assets/img/logo_yellow.png";
+            srcImage = "../assets/img/logo_copper.png";
             textColor = "text-gray-600 bg-gray-200 px-2 py-2 truncate";
         }
         const html = []

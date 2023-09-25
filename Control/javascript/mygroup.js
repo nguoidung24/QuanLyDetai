@@ -203,34 +203,35 @@ class MyGroup extends React.Component {
       // console.log(this.totalPage);
       const { group, myGroup, groupAll } = this.state;
       return (
-         <div className="container px-1 mx-auto">
+         <div className="container px-2 mx-auto">
             <div className="grid grid-cols-1">
-               <div>
-                  <p className="text-black font-semibold py-3 underline">Nhóm bạn tạo: </p>
+               <div className="w-full">
+                  <p className="text-black font-semibold py-3 underline italic">Nhóm bạn tạo: </p>
                </div>
-               <div>
+               <div className="w-full">
                   {this.getTable(this.getGroup(myGroup, false))}
                </div>
-               <div>
-                  <p className="text-black font-semibold py-3 underline">Nhóm bạn là thành viên: </p>
+               <div className="w-full">
+                  <p className="text-black font-semibold py-3 underline italic">Nhóm bạn là thành viên: </p>
                </div>
-               <div>
+               <div className="w-full">
                   {this.getTable(this.getGroup(group, false, true))}
                </div>
             </div>
             <div className="grid grid-cols-1">
-               <div className="mt-3">
+            <p className="text-black font-semibold py-3 underline italic">Chọn nhóm để tham gia: </p>
+               <div className="mt-3 w-full">
                   <FormSearch placeholder="Nhập mã nhóm"
                      onClick={this.handleSubmitSearch}
                      onChange={this.handleChangeSearch}
                      valueInput={this.state.inputSearch}
                   />
                </div>
-               <div className="mt-3">
+               <div className="mt-1 w-full">
                   <Button obj={this.handleClick}
                      cssClass="bg-cyan-500" text="Tham Gia" />
                </div>
-               <div className="mt-3">
+               <div className="mt-2 w-full">
                   {this.getTable(this.getGroup(groupAll, true))}
                </div>
                <div className="mt-3 flex justify-center gap-x-2">
