@@ -47,23 +47,33 @@ class CreatGroup{
             return false;
         }
     }
-    public function getTable_MaDeTai(){
+    public function getTable_MaDeTai($start, $limit){
         $table = [];
-        $query = "SELECT ma_de_tai, ten_de_tai FROM de_tai WHERE trang_thai = 1";
+        $query = "SELECT ma_de_tai, ten_de_tai FROM de_tai WHERE trang_thai = 1 LIMIT $start, $limit";
         $result = mysqli_query($this->conn, $query);
         while($row = mysqli_fetch_assoc($result)){
             $table[] = $row;
         }
         return $table;
     }
-    public function search($ten_de_tai){
+    public function search($ten_de_tai,$start, $limit){
         $table = [];
-        $query = "SELECT ma_de_tai, ten_de_tai FROM de_tai WHERE  ten_de_tai like '%$ten_de_tai%' and trang_thai = 1";
+        $query = "SELECT ma_de_tai, ten_de_tai FROM de_tai WHERE  ten_de_tai like '%$ten_de_tai%' and trang_thai = 1 LIMIT $start, $limit";
         $result = mysqli_query($this->conn, $query);
         while($row = mysqli_fetch_assoc($result)){
             $table[] = $row;
         }
         return $table;
+    }
+    public function getTotalRow(){
+        $query = "SELECT COUNT(*) as total FROM de_tai WHERE trang_thai = 1";
+        $result = mysqli_query($this->conn, $query);
+        return mysqli_fetch_assoc($result)['total'];
+    }
+    public function getTotaRow_Search($ten_de_tai){
+        $query = "SELECT COUNT(*) as total FROM de_tai WHERE ten_de_tai like '%$ten_de_tai%' and trang_thai = 1 ";
+        $result = mysqli_query($this->conn, $query);
+        return mysqli_fetch_assoc($result)['total'];
     }
 }
 ?>

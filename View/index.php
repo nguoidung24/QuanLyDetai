@@ -36,8 +36,8 @@ if (!isset($_SESSION['login']))
   <script type="text/babel">
     const container = document.getElementById('root');
     ReactDOM.createRoot(container).render(<Menu
-      ten_sinh_vien="<?php echo "Nguyễn Văn Tùng"; ?>"
-      ma_sinh_vien="<?php echo "3"; ?>"
+      ten_sinh_vien="<?php echo $_SESSION['ten_sinh_vien']; ?>"
+      ma_sinh_vien="<?php echo $_SESSION['ma_sinh_vien']; ?>"
     />);
   </script>
   <script src="../Control/javascript/account.js" type="text/babel"></script>

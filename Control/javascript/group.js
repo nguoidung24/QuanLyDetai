@@ -37,7 +37,10 @@ class Group extends React.Component {
             inputSearch: "",
             table_MaDeTai: []
         };
-        this.trActive = ""
+        this.trActive = "";
+        this.isSearch = false;
+        this.totalPage = 0;
+        this.currentPage = 1;
     }
     componentDidMount() {
         fetch("../Control/php/group.php", {
@@ -49,17 +52,20 @@ class Group extends React.Component {
             })
         })
             .then(response => response.json())
-            .then(data => this.setState({
-                options_Khoa: data.getOptions_Khoa,
-                options_BoMon: data.getOptions_BoMon,
-                options_GiangVien: data.getOptions_GiangVien,
-                formSubmit: {
-                    ma_de_tai: "",
-                    ten_nhom: "",
-                    ma_giang_vien: data.getOptions_GiangVien[0] && data.getOptions_GiangVien[0].ma_giang_vien
-                },
-                table_MaDeTai: data.getTable_MaDeTai
-            })
+            .then(data => {
+                this.totalPage = data.totalPage;
+                this.setState({
+                    options_Khoa: data.getOptions_Khoa,
+                    options_BoMon: data.getOptions_BoMon,
+                    options_GiangVien: data.getOptions_GiangVien,
+                    formSubmit: {
+                        ma_de_tai: "",
+                        ten_nhom: "",
+                        ma_giang_vien: data.getOptions_GiangVien[0] && data.getOptions_GiangVien[0].ma_giang_vien
+                    },
+                    table_MaDeTai: data.getTable_MaDeTai
+                })
+            }
             )
     }
     handleCreatGroup = () => {
@@ -155,9 +161,10 @@ class Group extends React.Component {
         }))
     }
     get_tdTable_MaDeTai = (arr) => {
+        let cssClass = this.isSearch == true ? "py-3 underline underline-offset-4 decoration-green-500" : "py-3";
         let html = [];
         Object.keys(arr).forEach(item => {
-            html.push(<td className="py-3" key={item}>{arr[item]}</td>)
+            html.push(<td className={cssClass} key={item}>{arr[item]}</td>)
         })
         return html
     }
@@ -197,7 +204,7 @@ class Group extends React.Component {
         )
     }
     handleSearch = () => {
-        const {inputSearch} = this.state;
+        const { inputSearch } = this.state;
         fetch("../Control/php/group.php", {
             method: "post",
             headers: { "Content-Type": "application/json" },
@@ -207,13 +214,87 @@ class Group extends React.Component {
             })
         })
             .then(response => response.json())
-            .then(data => this.setState((prev)=>({
-                ...prev,
-                table_MaDeTai: data.result
-            })));
+            .then(data => {
+                this.totalPage = data.totalPage;
+                this.isSearch = true;
+                this.currentPage = 1;
+                this.setState((prev) => ({
+                    ...prev,
+                    table_MaDeTai: data.result
+                }))
+            });
+    }
+    get_liPagination = (text) => {
+        let cssClass = (text == this.currentPage) ?
+            "text-sky-500" : "";
+        return (
+            <li onClick={this.handle_ClickPagiantion} className="
+              px-4 py-2 cursor-pointer text-black
+           ">
+                <a className={cssClass} >
+                    {text}
+                </a>
+            </li>
+        )
+    }
+    getPagination = () => {
+        return (
+            <form onSubmit={this.handle_ClickPagiantion} >
+                <ul className="flex justify-center">
+                    {this.currentPage > 1 && this.get_liPagination("First")}
+                    {this.currentPage > 1 && this.get_liPagination(this.currentPage - 1)}
+                    {this.get_liPagination(this.currentPage)}
+                    {this.currentPage < this.totalPage && this.get_liPagination(this.currentPage + 1)}
+                    {this.currentPage < this.totalPage && this.get_liPagination("Last")}
+                </ul>
+            </form>
+
+        );
+    }
+    handle_ClickPagiantion = (e) => {
+        e.preventDefault();
+        fetch("../Control/php/group.php", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                "pageSubmit": e.target.innerText,
+                "isSearch":this.isSearch,
+                "inputSearch": this.state.inputSearch
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                this.isSearch = data.isSearch;
+                this.totalPage = Number(data.totalPage);
+                this.currentPage = Number(data.currentPage);
+                this.setState((prev) => ({
+                    ...prev,
+                    table_MaDeTai: data.result
+                }))
+            })
+    }
+    tat_ca_de_tai = () => {
+        fetch("../Control/php/group.php", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                "tat_ca_de_tai": true
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                this.isSearch = data.isSearch;
+                this.totalPage = Number(data.totalPage);
+                this.currentPage = Number(data.currentPage);
+                this.setState((prev) => ({
+                    ...prev,
+                    table_MaDeTai: data.getTable_MaDeTai,
+                    inputSearch: ""
+                }))
+            });
     }
     render() {
-        console.log(this.state.inputSearch)
+        console.log(this.isSearch)
         const { options_BoMon, options_Khoa, options_GiangVien, table_MaDeTai } = this.state;
         return (
             <div className="container px-3 lg:px-2 mx-auto">
@@ -238,19 +319,24 @@ class Group extends React.Component {
                             <Input text="Mã đề tài" value={this.state.formSubmit.ma_de_tai} handleChange={(e) => this.handleChange_MaDeTai(e)} />
                         </div>
                     </div>
-                    <div className="mt-3">
-                        <Button text="Tạo nhóm" obj={() => this.handleCreatGroup()} cssClass="bg-cyan-600" />
+                    <div className="mt-3 relative">
+                        <Button text="Tạo nhóm" obj={() => this.handleCreatGroup()} cssClass="bg-cyan-600 absolute left-0 top-2" />
+                        <FormSearch valueInput={this.state.inputSearch} onChange={
+                            (e) => this.setState((prev) => ({
+                                ...prev,
+                                inputSearch: e.target.value
+                            }))
+                        } onClick={() => this.handleSearch()}
+                            placeholder="Tên đề tài" />
                     </div>
                 </div>
-                <p className="mt-3 italic">Nhập mã đề tài hoặc click để chọn</p>
-                <FormSearch valueInput={this.state.inputSearch} onChange={
-                    (e) => this.setState((prev) => ({
-                        ...prev,
-                        inputSearch: e.target.value
-                    }))
-                } onClick={() => this.handleSearch()}
-                    placeholder="Tên đề tài" />
+
+                <div className="flex justify-between w-full">
+                    <p className="px-2 italic">Nhập mã đề tài hoặc click để chọn</p>
+                    <button onClick={() => this.tat_ca_de_tai()} className='text-sky-400 underline italic'>Tất cả</button>
+                </div>
                 {this.getTable_MaDeTai(table_MaDeTai)}
+                {this.totalPage > 0 && this.getPagination()}
             </div>
         );
     }

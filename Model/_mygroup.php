@@ -6,7 +6,17 @@ class Group{
     public function getMyGroup($ma_sinh_vien){
         $myGroup = [];
         $query = "
-        SELECT * FROM nhom WHERE ma_sinh_vien = $ma_sinh_vien
+        SELECT nhom.ma_nhom, nhom.ten_nhom, nhom.ngay_tao,
+            de_tai.ten_de_tai,
+            sinh_vien.ten_sinh_vien,
+            giang_vien.ten_giang_vien,
+            giai_thuong.ten_giai_thuong
+        FROM nhom, de_tai, sinh_vien, giang_vien, giai_thuong 
+        WHERE nhom.ma_sinh_vien = $ma_sinh_vien
+        	and nhom.ma_de_tai = de_tai.ma_de_tai
+            and nhom.ma_sinh_vien = sinh_vien.ma_vien_vien 
+            and nhom.ma_giang_vien = giang_vien.ma_giang_vien
+            and nhom.ma_giai_thuong = giai_thuong.ma_giai_thuong
         ";
         $result = mysqli_query($this->conn, $query);
         while($row = mysqli_fetch_assoc($result)){
@@ -17,10 +27,18 @@ class Group{
     public function getGroup($ma_sinh_vien){
         $group = [];
         $query = "
-        SELECT nhom.* 
-        FROM nhom, thanh_vien_nhom 
+        SELECT nhom.ma_nhom, nhom.ten_nhom, nhom.ngay_tao,
+            de_tai.ten_de_tai,
+            sinh_vien.ten_sinh_vien,
+            giang_vien.ten_giang_vien,
+            giai_thuong.ten_giai_thuong
+        FROM thanh_vien_nhom, nhom, de_tai, sinh_vien, giang_vien, giai_thuong 
         WHERE thanh_vien_nhom.ma_sinh_vien = $ma_sinh_vien
-        and nhom.ma_nhom = thanh_vien_nhom.ma_nhom
+        	and thanh_vien_nhom.ma_nhom = nhom.ma_nhom
+        	and nhom.ma_de_tai = de_tai.ma_de_tai
+            and nhom.ma_sinh_vien = sinh_vien.ma_vien_vien 
+            and nhom.ma_giang_vien = giang_vien.ma_giang_vien
+            and nhom.ma_giai_thuong = giai_thuong.ma_giai_thuong
         ";
         $result = mysqli_query($this->conn, $query);
         while($row = mysqli_fetch_assoc($result)){
@@ -31,8 +49,16 @@ class Group{
     public function getGroupAll(){
         $group = [];
         $query = "
-        SELECT nhom.* 
-        FROM nhom
+        SELECT nhom.ma_nhom, nhom.ten_nhom, nhom.ngay_tao,
+            de_tai.ten_de_tai,
+            sinh_vien.ten_sinh_vien,
+            giang_vien.ten_giang_vien,
+            giai_thuong.ten_giai_thuong
+        FROM nhom, de_tai, sinh_vien, giang_vien, giai_thuong 
+        WHERE nhom.ma_de_tai = de_tai.ma_de_tai
+            and nhom.ma_sinh_vien = sinh_vien.ma_vien_vien 
+            and nhom.ma_giang_vien = giang_vien.ma_giang_vien
+            and nhom.ma_giai_thuong = giai_thuong.ma_giai_thuong
         ";
         $result = mysqli_query($this->conn, $query);
         while($row = mysqli_fetch_assoc($result)){
@@ -43,9 +69,17 @@ class Group{
     public function getSearchResult($ma_nhom){
         $group = [];
         $query = "
-        SELECT nhom.* 
-        FROM nhom 
-        WHERE ma_nhom = $ma_nhom
+        SELECT nhom.ma_nhom, nhom.ten_nhom, nhom.ngay_tao,
+            de_tai.ten_de_tai,
+            sinh_vien.ten_sinh_vien,
+            giang_vien.ten_giang_vien,
+            giai_thuong.ten_giai_thuong
+        FROM nhom, de_tai, sinh_vien, giang_vien, giai_thuong 
+        WHERE nhom.ma_nhom = $ma_nhom
+        	and nhom.ma_de_tai = de_tai.ma_de_tai
+            and nhom.ma_sinh_vien = sinh_vien.ma_vien_vien 
+            and nhom.ma_giang_vien = giang_vien.ma_giang_vien
+            and nhom.ma_giai_thuong = giai_thuong.ma_giai_thuong
         ";
         $result = mysqli_query($this->conn, $query);
         while($row = mysqli_fetch_assoc($result)){
@@ -79,8 +113,17 @@ class Group{
     public function getTableGroup($start, $limit){
         $group = [];
         $query = "
-        SELECT nhom.* 
-        FROM nhom
+        SELECT nhom.ma_nhom, nhom.ten_nhom, nhom.ngay_tao,
+            de_tai.ten_de_tai,
+            sinh_vien.ten_sinh_vien,
+            giang_vien.ten_giang_vien,
+            giai_thuong.ten_giai_thuong
+        FROM nhom, de_tai, sinh_vien, giang_vien, giai_thuong 
+        WHERE nhom.ma_de_tai = de_tai.ma_de_tai
+            and nhom.ma_sinh_vien = sinh_vien.ma_vien_vien 
+            and nhom.ma_giang_vien = giang_vien.ma_giang_vien
+            and nhom.ma_giai_thuong = giai_thuong.ma_giai_thuong
+        
         LIMIT $start, $limit
         ";
         $result = mysqli_query($this->conn, $query);
@@ -96,6 +139,15 @@ class Group{
         ";
         $result = mysqli_query($this->conn, $query);
         return  mysqli_fetch_assoc($result)["toltal"];
+    }
+    public function deleteGroup($ma_nhom){
+        $query = "DELETE FROM nhom WHERE nhom.ma_nhom = $ma_nhom";
+        try{
+            return mysqli_query($this->conn, $query);
+        }
+        catch(Exception $e){
+            return false;
+        }
     }
 }
 ?>

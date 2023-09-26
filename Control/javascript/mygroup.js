@@ -54,11 +54,38 @@ class MyGroup extends React.Component {
       Object.keys(obj).map(k => {
          html.push(<td key={k} className="text-sm py-3 lg:py-2">{obj[k]}</td>)
       })
-      html.push(showbutton && <td key="_a" className="text-sm py-3 lg:py-2">
-         <Button text="Rời" cssClass="bg-sky-500 hover:bg-orange-500"
+      html.push(showbutton == 2 && <td key="_a" className="text-sm py-3 lg:py-2">
+         <Button text="Rời" cssClass="bg-sky-500 hover:bg-red-500"
             obj={() => this.handelButtonGetOut(ma_nhom)} />
       </td>)
+      html.push(showbutton == 1 && <td key="_a" className="text-sm py-3 lg:py-2">
+            <Button text="Xóa" cssClass="bg-orange-500 hover:bg-red-700"
+               obj={() => this.handleDeleteGroup(ma_nhom)} />
+         </td>)
       return html;
+   }
+   handleDeleteGroup = (ma_nhom) =>{
+      if(confirm("Bạn có muốn xóa nhóm của bạn?")){
+         fetch("../Control/php/mygroup.php",{
+            method: "post",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+               "deleteGroup" : true,
+               "ma_nhom" : ma_nhom,
+               "ma_sinh_vien" : this.props.ma_sinh_vien
+            })
+         })
+         .then(response => response.json())
+         .then(data => {
+            if(data.result) {
+               alert("Thành công")
+               this.setState( prev => ({
+                  ...prev,
+                  myGroup : data.myGroup
+               }))
+            }
+            else alert("Không thành công")
+         })}
    }
    handle_trClick = (e) => {
       const ma_nhom = e.target.parentElement.children[0].innerText;
@@ -67,7 +94,7 @@ class MyGroup extends React.Component {
          trActive: ma_nhom
       }))
    }
-   getGroup = (array, addClick, showButton = false) => {
+   getGroup = (array, addClick, showButton = 0) => {
       const { trActive } = this.state;
       let html = [];
       array.map((item, index) => {
@@ -93,12 +120,12 @@ class MyGroup extends React.Component {
             border-gray-400 border-b-2 lg:text-sm'>
                <tr>
                   <th className="py-2">Mã nhóm </th>
-                  <th className="py-2">Tên nhóm</th>
+                  <th className="py-2">Tên nhóm </th>
                   <th className="py-2">Ngày tạo</th>
-                  <th className="py-2">Mã giả thưởng</th>
-                  <th className="py-2">Mã giảng viên</th>
-                  <th className="py-2">Mã sinh viên</th>
-                  <th className="py-2">Mã đề tài</th>
+                  <th className="py-2">Tên đề tài</th>
+                  <th className="py-2">Tên người tạo</th>
+                  <th className="py-2">Giảng viên HD</th>
+                  <th className="py-2">Giải thưởng</th>
                </tr>
             </thead>
             <tbody className='text-sm text-center text-xs lg:text-base'>
@@ -209,13 +236,13 @@ class MyGroup extends React.Component {
                   <p className="text-black font-semibold py-3 underline italic">Nhóm bạn tạo: </p>
                </div>
                <div className="w-full">
-                  {this.getTable(this.getGroup(myGroup, false))}
+                  {this.getTable(this.getGroup(myGroup, false,1))}
                </div>
                <div className="w-full">
                   <p className="text-black font-semibold py-3 underline italic">Nhóm bạn là thành viên: </p>
                </div>
                <div className="w-full">
-                  {this.getTable(this.getGroup(group, false, true))}
+                  {this.getTable(this.getGroup(group, false, 2))}
                </div>
             </div>
             <div className="grid grid-cols-1">

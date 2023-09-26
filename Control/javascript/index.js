@@ -98,6 +98,11 @@ class Menu extends React.Component {
                                 <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5ZM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5 5 5Z"/>
                             </svg>
                         ), ["home"])}
+                        {this.getLi(false, "Quản lý thành viên",(
+                            <svg xmlns="http://www.w3.org/2000/svg" width="60" height="36" fill="currentColor" className="bi bi-briefcase" viewBox="0 0 16 16">
+                                <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5zm1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0zM1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        ),["groupManager"])}
                         {this.getLi(true, "Nhóm", (
                             <svg xmlns="http://www.w3.org/2000/svg" width="60" height="36" fill="currentColor" className="bi bi-mortarboard" viewBox="0 0 16 16">
                                 <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5ZM8 8.46 1.758 5.965 8 3.052l6.242 2.913L8 8.46Z"/>
@@ -128,7 +133,7 @@ class Menu extends React.Component {
                     <div className="content" id="main_trang_chu">
                         {main == "home" && <Home />}
                         {main == "creat" && <Group ma_sinh_vien={this.props.ma_sinh_vien}/>}
-                        {main == "profile" && <Profile />}
+                        {main == "profile" && <Profile ma_sinh_vien={this.props.ma_sinh_vien}/>}
                         {main == "dang_ky_de_tai" && <Dang_Ky_De_Tai ma_sinh_vien={this.props.ma_sinh_vien}/>}
                         {main == "de_tai_cua_ban" && <DeTaiCuaBan ma_sinh_vien={this.props.ma_sinh_vien}/>}
                         {main == "mygroup" && <MyGroup ma_sinh_vien={this.props.ma_sinh_vien} />}

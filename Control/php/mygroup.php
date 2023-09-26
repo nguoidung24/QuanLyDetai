@@ -5,7 +5,13 @@ $group = new Group($conn);
 $json = file_get_contents("php://input");
 $data = json_decode($json, true);
 $limit = 2;
-if(isset($data["pageSubmit"])){
+if(isset($data["deleteGroup"])){
+    $response = [
+        "result" => $group->deleteGroup($data["ma_nhom"]),
+        "myGroup" =>  $group->getMygroup($data["ma_sinh_vien"])
+    ];
+}
+else if(isset($data["pageSubmit"])){
     if( $data["pageSubmit"] == "First"){
         $start = 0;
         $groupAll = $group->getTableGroup($start,$limit);

@@ -1,11 +1,24 @@
 <?php
     session_start();
+    require_once "../Model/_connect.php";
+    function login($ma_sinh_vien, $mat_khau){
+        global $conn;
+        $query = "SELECT sinh_vien.ten_sinh_vien, sinh_vien.ma_vien_vien FROM sinh_vien 
+            WHERE sinh_vien.ma_vien_vien = $ma_sinh_vien
+            AND sinh_vien.mat_khau = '$mat_khau'"
+        ;
+        $result = mysqli_query($conn, $query);
+        return mysqli_fetch_assoc($result);
+    }
     if(isset($_GET["formSubmit"])){
         $userName = $_GET["userName"];
         $password = $_GET["password"];
-        if($userName == 1 && $password == 1){
-            $_SESSION["login"] = 1;
+        if(login($userName, $password) != null){
+            $_SESSION['login'] = true;
+            $_SESSION['ma_sinh_vien'] = login($userName, $password)['ma_vien_vien'];
+            $_SESSION['ten_sinh_vien'] = login($userName, $password)['ten_sinh_vien'];
             header("location: index.php");
+
         }
     }
 ?>
