@@ -100,11 +100,26 @@ class Group{
             return false;
         }
     }
+    private function da_trao_giai($ma_nhom){
+        $query = "SELECT COUNT(nhom.ma_giai_thuong) as total FROM nhom WHERE nhom.ma_nhom = $ma_nhom AND nhom.ma_giai_thuong > -1";
+        $result = mysqli_query($this->conn, $query);
+        return (int)mysqli_fetch_assoc($result)["total"] > 0;
+    }
+    private function da_trong_nhom($ma_sinh_vien,$ma_nhom){
+        $query = "SELECT COUNT(nhom.ma_sinh_vien) as total FROM nhom WHERE nhom.ma_sinh_vien = $ma_sinh_vien and nhom.ma_nhom = $ma_nhom";
+        $result = mysqli_query($this->conn, $query);
+        return (int)mysqli_fetch_assoc($result)["total"] > 0;
+    }
     public function joinGroup($ma_nhom, $ma_sinh_vien){
         try{
-            return mysqli_query($this->conn,
-                "INSERT INTO thanh_vien_nhom(ma_nhom, ma_sinh_vien)
-                VALUES ('$ma_nhom','$ma_sinh_vien')");
+            if($this->da_trong_nhom($ma_sinh_vien,$ma_nhom) || $this->da_trao_giai($ma_nhom)){
+                return false;
+            }
+            else{
+                return mysqli_query($this->conn,
+                    "INSERT INTO thanh_vien_nhom(ma_nhom, ma_sinh_vien)
+                        VALUES ('$ma_nhom','$ma_sinh_vien')");
+            }
         }
         catch(Exception $e){
             return false;

@@ -154,7 +154,7 @@ class MyGroup extends React.Component {
                      group: data.group
                   }))
                   alert("Tham gia thành công");
-               } else alert("Bạn đã trong nhóm");
+               } else alert("Bạn đã trong nhóm, Hoặc nhóm đã được trao thưởng !!");
             })
       }
    }

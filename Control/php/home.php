@@ -9,7 +9,8 @@ if(isset($data->detail)){
     echo json_encode([
         "result" => $home->getDetail(),
         "thanh_vien_nhom" => $home->lay_thanh_vien_nhom(),
-        "giang_vien" => $home->lay_giang_vien()
+        "giang_vien" => $home->lay_giang_vien(),
+        "nguoi_tao" => $home->lay_nguoi_tao()
     ]);
 }
 else{

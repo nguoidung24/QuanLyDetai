@@ -62,6 +62,17 @@ class Home {
         }
         return $table;
     }
+    public function lay_nguoi_tao(){
+        $query = "SELECT sinh_vien.ten_sinh_vien, sinh_vien.so_dien_thoai, lop.ten_lop
+        FROM nhom, sinh_vien, lop
+        WHERE 
+            nhom.ma_nhom = $this->ma_nhom
+            AND nhom.ma_sinh_vien = sinh_vien.ma_vien_vien
+            AND sinh_vien.ma_lop = lop.ma_lop
+        ";
+        $result = mysqli_query($this->conn, $query);
+        return mysqli_fetch_assoc($result);
+    }
     public function lay_giang_vien(){
         $query = "SELECT giang_vien.ten_giang_vien, giang_vien.so_dien_thoai
         FROM nhom, giang_vien
