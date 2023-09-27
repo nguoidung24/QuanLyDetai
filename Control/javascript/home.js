@@ -2,7 +2,9 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: []
+            data: [],
+            ma_nhom : 0,
+            detail : false
         }
     }
     componentDidMount() {
@@ -15,7 +17,7 @@ class Home extends React.Component {
             body: JSON.stringify({})
         }).then(response => response.json())
             .then(data =>
-                this.setState({ data: data })
+                this.setState((prev)=>({ ...prev, data: data }))
             )
     }
     getCard = (data, giai_thuong) => {
@@ -43,7 +45,7 @@ class Home extends React.Component {
                         <p className="text-sm truncate">Người tạo: {value.ten_sinh_vien}</p>
                         <p className="text-sm py-1 truncate">GV hướng dẫn: {value.ten_giang_vien}</p>
                         <p className="text-sm truncate">Năm: {value.ngay_tao}</p>
-                        <button className="border border-sky-700 text-sky-700 px-4 py-1 mt-1 hover:bg-gray-300 rounded">Chi tiết</button>
+                        <button onClick={() => this.hendleClick_detail(value.ma_nhom)} className="border border-sky-700 text-sky-700 px-4 py-1 mt-1 hover:bg-gray-300 rounded">Chi tiết</button>
                     </div>
                 </div>
             )
@@ -53,6 +55,19 @@ class Home extends React.Component {
                 {html}
             </div>
         )
+    }
+    hendleClick_detail = (ma_nhom) =>{
+        this.setState((prev) => ({
+            ...prev,
+            detail : true,
+            ma_nhom: ma_nhom
+        }))
+    }
+    handleClick_back = () => {
+        this.setState((prev) => ({
+            ...prev,
+            detail : false
+        }))      
     }
     getGrid = (text,callBack) =>{
         return (
@@ -66,14 +81,39 @@ class Home extends React.Component {
             </div>
         )
     }
-    render() {
-        const { data } = this.state;
+    renderDefault(data){
         return (
-           data.length !=0 && <>
+            (data.length != 0) && 
+            <>
                 {this.getGrid("nhất",this.getCard(data["giainhat"], 1))}
                 {this.getGrid("nhì",this.getCard(data["giainhi"], 2))}
                 {this.getGrid("ba",this.getCard(data["giaiba"], 3))}
             </>
+        )
+    }
+    renderDetail(componentDetail){
+        return(
+            <div className="container px-2 mx-auto">
+            <div>
+                <button onClick={this.handleClick_back} className="flex gap-2 border-b hover:scale-90">
+                    <i className="my-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                            <path fillRule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
+                            <path fillRule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                        </svg>
+                    </i>
+                    <span>Quay lại</span>
+                </button>
+            </div>
+            {componentDetail}
+        </div>
+        )
+    }
+    render() {
+        const { data,detail,ma_nhom } = this.state;
+        return (
+            detail == false ?
+                this.renderDefault(data):this.renderDetail(<ChiTietDeTai ma_nhom={ma_nhom} />)
         )
     }
 }

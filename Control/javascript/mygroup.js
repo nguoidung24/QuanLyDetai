@@ -160,20 +160,21 @@ class MyGroup extends React.Component {
    }
    handleSubmitSearch = () => {
       const { inputSearch } = this.state;
-      fetch("../Control/php/mygroup.php", {
-         method: "post",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify({
-            "inputSearch": inputSearch,
+      if(Number(inputSearch)){
+         fetch("../Control/php/mygroup.php", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+               "inputSearch": inputSearch,
+            })
          })
-      })
-         .then(response => response.json())
-         .then(data => {
-            this.setState((prev) => ({
-               ...prev,
-               groupAll: data.dataSearch
-            }))
-         })
+            .then(response => response.json())
+            .then(data => {
+               this.setState((prev) => ({
+                  ...prev,
+                  groupAll: data.dataSearch
+               }))
+      })} else alert("Mã đề tài không hợp lệ");
    }
    handleChangeSearch = (e) => {
       this.setState(prev => ({
